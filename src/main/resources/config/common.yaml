@@ -1,0 +1,10 @@
+api:
+ name: "batch-api"
+ version: "1.0.0"
+ logger:
+  package: "org.mulesoft.templates"
+batch:
+  status:
+   key: "JOB_STATUS"
+   running: "RUNNING"
+   complete: "COMPLETE"  

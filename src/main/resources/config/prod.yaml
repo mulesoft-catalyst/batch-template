@@ -1,0 +1,18 @@
+apiId: "0000"
+
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  
+https:
+  host: "0.0.0.0"
+  port: "8082"
+ 
+batch:
+  data: "https://raw.githubusercontent.com/kaz-ogiwara/covid19/master/data/prefectures.csv"
+
+cache:
+  failure:
+    ttl: "60"
+    interval: "30"    
+   

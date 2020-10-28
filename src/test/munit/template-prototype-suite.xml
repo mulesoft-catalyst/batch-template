@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="template-prototype-suite.xml" />
+	<munit:test name="get:\healthcheck:template-prototype-config-test" doc:id="474a84d4-b268-408f-824e-ef2c979043ba" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="1b9079fc-a0b4-4866-b3dc-ffe9d1429fbc" >
+				<munit:payload value="#[readUrl('classpath://gethealthchecktemplateprototypeconfigtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://gethealthchecktemplateprototypeconfigtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://gethealthchecktemplateprototypeconfigtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\healthcheck:template-prototype-config" doc:id="40f12f58-4520-4b65-9115-0d82b30b7a7c" name="batch-api-implementation-get-healthcheck"/>
+		</munit:execution>
+		<munit:validation >
+			<logger level="INFO" doc:name="Logger" doc:id="444e7957-743e-4837-aff8-67568082f912" message="#[payload]"/>
+			<munit-tools:assert doc:name="Assert payload" doc:id="f35d0bdf-8a00-48c8-b84a-40f8144e4c9f" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import gethealthchecktemplateprototypeconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

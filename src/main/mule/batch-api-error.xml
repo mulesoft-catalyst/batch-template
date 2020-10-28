@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="batch-api-error-handler"
+		doc:id="b7b9f10d-9a50-47a7-9695-8adb51c61cbd">
+		<on-error-propagate type="APIKIT:BAD_REQUEST">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Bad Request Message">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/badRequestMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400
+					]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_FOUND">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Not Found Message">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/notFoundMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[404
+					]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate
+			type="APIKIT:METHOD_NOT_ALLOWED">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Method Not Allowed Message">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/methodNotAllowedMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[405
+					]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Not Acceptable Message">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/notAcceptableMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[406
+					]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate
+			type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Unsupported Media Type Message">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/unsupportedMediaTypeMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[415
+					]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Not Implemented Message">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/notImplementedMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[501
+					]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate type="VALIDATION:INVALID_BOOLEAN">
+			<ee:transform
+				xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+				xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+				doc:name="Validation Errors">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/notImplementedMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[400				]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		
+		<on-error-propagate enableNotifications="true"
+			logException="true" doc:name="On Error Propagate"
+			doc:id="7d4a335e-872d-4266-9c15-11eb7e80d914" type="ANY">
+			<ee:transform doc:name="Generic Error Message"
+				doc:id="5fd402a9-20c3-47e5-9a82-a0745afe5950">
+				<ee:message>
+					<ee:set-payload
+						resource="transformations/error/genericMessage.dwl" />
+				</ee:message>
+				<ee:variables>
+					<ee:set-variable variableName="httpStatus"><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
