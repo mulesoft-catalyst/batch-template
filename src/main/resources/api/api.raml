@@ -1,0 +1,44 @@
+#%RAML 1.0
+title: batch-template
+description: A standard way of implementing batch processing and capture failores and successfull records
+baseUri: http://localhost:8081/batch-processing/
+
+/batch:
+  /run:
+    get:
+      description: Run batch job
+      responses:
+        200:
+          body:
+            application/json:
+              
+  /status:
+    get:
+      description: Get the status of batch
+      responses:
+        200:
+          body:
+            application/json:
+  /clearStatus:
+     delete:
+       description: Clear current object store status
+       responses:
+         200:
+          body:
+            application/json:
+                         
+/failure:
+    get:
+      description: Get all failed records
+      responses:
+        200:
+          body:
+            application/json:
+              
+ 
+/healthcheck:
+  get:
+    responses:
+      200:
+        body:
+          application/json:

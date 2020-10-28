@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+    <flow name="api-main">
+        <http:listener config-ref="batch-api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="api-config" />
+        <error-handler ref="batch-api-error-handler" />
+    </flow>
+    <flow name="api-console">
+        <http:listener config-ref="batch-api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\failure:api-config">
+        <logger level="INFO" message="get:\failure:api-config" />
+    </flow>
+    <flow name="get:\healthcheck:api-config">
+        <flow-ref doc:name="batch-api-implementation-get-healthcheck" doc:id="6502878f-ff72-4e9f-9edf-11419fbcc656" name="batch-api-implementation-get-healthcheck" />
+    </flow>
+    <flow name="get:\batch\run:api-config">
+        <flow-ref doc:name="batch-api-implementation-main" doc:id="f751a4ae-b027-4e23-aa57-af9d6f0b82fc" name="batch-api-implementation-main" />
+	    </flow>
+    <flow name="get:\batch\status:api-config">
+        <flow-ref doc:name="check-batch-status" doc:id="77c27f90-04f2-4ae0-861a-ad28ce18e050" name="check-batch-status" />
+		<set-payload value="#[output application/json --- payload]" doc:name="Set Payload" doc:id="85cd9f39-5dd7-46a3-86ab-da8181795af9" />
+    </flow>
+    <flow name="delete:\batch\clearStatus:api-config">
+		<flow-ref doc:name="clear-batch-status" doc:id="6b361432-11e8-43b6-b1cd-4f0e782474fb" name="clear-batch-status"/>
+    </flow>
+</mule>
