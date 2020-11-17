@@ -9,7 +9,7 @@ https:
   port: "8082"
  
 batch:
-  data: "https://raw.githubusercontent.com/kaz-ogiwara/covid19/master/data/prefectures.csv"
+  data: "https://raw.githubusercontent.com/tomwhite/covid-19-uk-data/master/data/raw/phw/csv/Tests_by_specimen_date.csv"
 
 cache:
   failure:
