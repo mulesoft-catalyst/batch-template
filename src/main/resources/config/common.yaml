@@ -7,4 +7,6 @@ batch:
   status:
    key: "JOB_STATUS"
    running: "RUNNING"
-   complete: "COMPLETE"  
+   complete: "COMPLETE" 
+  execution:
+    queue: "execution.queue" 
