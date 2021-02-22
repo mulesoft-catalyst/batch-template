@@ -1,12 +1,14 @@
 api:
- name: "batch-api"
+ name: "mule-batch-template"
  version: "1.0.0"
  logger:
   package: "org.mulesoft.templates"
+  
 batch:
   status:
    key: "JOB_STATUS"
    running: "RUNNING"
    complete: "COMPLETE" 
+   
   execution:
     queue: "execution.queue" 
