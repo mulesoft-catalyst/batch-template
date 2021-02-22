@@ -69,6 +69,14 @@ output application/json
 			</ee:message>
 		</ee:transform>
 	</flow>
+	<flow name="batch-api-implementationFlow" doc:id="293407f3-2122-4c61-b6d8-e6e5ab75b17e" >
+		<scheduler doc:name="Scheduler" doc:id="9d441947-5f13-40b3-ae76-4e7d32673fd1" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="${batch.scheduler.frequency}" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="batch-api-implementation-main" doc:id="fa3d48b7-ada7-4dea-8d84-f311221fb871" name="batch-api-implementation-main"/>
+	</flow>
 	<sub-flow name="batch-api-data-transformation" doc:id="72cfb997-ad2f-4569-b1dc-8bf328bfdaf8" >
 		<ee:transform doc:name="Data Transformation" doc:id="e4d49405-2839-4dfe-a49d-cfcef8f8dc9d" >
 			<ee:message >
