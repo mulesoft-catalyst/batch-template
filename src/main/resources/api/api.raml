@@ -14,7 +14,7 @@ baseUri: http://localhost:8081/batch-processing/
               
   /status:
     get:
-      description: Get the status of the batch
+      description: Get the status of batch
       responses:
         200:
           body:
@@ -35,7 +35,14 @@ baseUri: http://localhost:8081/batch-processing/
           body:
             application/json:
               
- 
+/data:
+    get:
+      description: Provide sample records for testing
+      responses:
+        200:
+          body:
+            application/csv:
+            
 /healthcheck:
   get:
     responses:
