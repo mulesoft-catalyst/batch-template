@@ -17,6 +17,8 @@ batch:
     port: "443"
     path: "/tomwhite/covid-19-uk-data/master/data/raw/phw/csv/Tests_by_specimen_date.csv"
     secure: "true"
+  scheduler:
+    frequency: "5"
      
 cache:
   failure:
