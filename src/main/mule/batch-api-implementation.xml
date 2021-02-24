@@ -36,10 +36,13 @@ http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/
 				</batch:step>
 			</batch:process-records>
 			<batch:on-complete>
-				<os:store doc:name="Update Job Status To complete" doc:id="bcd1a3e2-33c1-4f77-ab11-9575fd0f5915" key="${batch.status.key}" objectStore="Batch_Error_Object_store">
+				<os:store doc:name="Update Job Status To complete" doc:id="bcd1a3e2-33c1-4f77-ab11-9575fd0f5915" 
+				               key="${batch.status.key}" objectStore="Batch_Error_Object_store">
 					<os:value><![CDATA[#[transformations::common::setBatchStatusToComplete()]]]></os:value>
 				</os:store>
-				<logger level="INFO" doc:name="Log Batch Result" doc:id="2ea2686c-2b98-47d5-8003-865242695d8e" message="Total Time Taken #[dw::util::Timer::currentMilliseconds() - vars.startTime], Batch Result #[output application/json --- payload]" category="${api.logger.package}" />
+				<logger level="INFO" doc:name="Log Batch Result" doc:id="2ea2686c-2b98-47d5-8003-865242695d8e" 
+				message="Total Time Taken #[dw::util::Timer::currentMilliseconds() - vars.startTime], Batch Result #[output application/json --- payload]"
+				 category="${api.logger.package}" />
 			</batch:on-complete>
 		</batch:job>
 	</flow>
@@ -90,16 +93,7 @@ output application/json
 	<sub-flow name="process-failures" doc:id="ecbf8610-4b92-48f1-a86b-a86dbd4a487e" >
 		<os:store doc:name="Store" doc:id="ccb1674a-8eac-4913-90c1-303e30699a7f" key="#[payload.'Local Authority' default '']" objectStore="Batch_Error_Object_store"/>
 	</sub-flow>
-	<sub-flow name="batch-api-implementation-get-healthcheck"
-		doc:id="2ab2ee4b-0a76-4dee-836b-6656206ce471">
-		<ee:transform doc:name="Healthcheck response"
-			doc:id="7363e54e-f531-4628-81b6-929091a23629">
-			<ee:message>
-				<ee:set-payload
-					resource="transformations/getHealthcheckResponse.dwl" />
-			</ee:message>
-		</ee:transform>
-	</sub-flow>
+
 	
 	<sub-flow name="batch-api-implementation-get-data"
 		doc:id="29f69eb1-884e-47d8-87a8-5319be952f2c">
@@ -110,4 +104,26 @@ output application/json
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
+	
+	<sub-flow name="check-batch-status" doc:id="f90e4006-4cec-4f85-b190-7c70415ed3cf" >
+		<os:retrieve doc:name="Retrieve Batch Status" doc:id="d412e589-4771-46ca-925b-4f71fb9dac9f" key="${batch.status.key}" objectStore="Batch_Error_Object_store">
+			<os:default-value ><![CDATA[#[{
+	"status": "",
+	"lastRun": ""
+}]]]></os:default-value>
+		</os:retrieve>
+		<logger level="INFO" doc:name="Log Batch Status" doc:id="c9ad4277-6c53-42b3-8878-8689b52730b3" message="Batch Status #[payload]" category="${api.logger.package}"/>
+	</sub-flow>
+	<sub-flow name="clear-batch-status" doc:id="28096d15-2291-4796-a2ab-6a71fa73e344" >
+		<try doc:name="Try" doc:id="ce319edc-1a05-4130-98ce-6037ba4bd76f" >
+			<os:remove doc:name="Remove Batch Status" doc:id="a951a61a-9546-4ced-8466-9816484ab305" key="${batch.status.key}" objectStore="Batch_Error_Object_store" />
+			<error-handler >
+				<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="b008de88-5917-4aa0-a38e-e6cc65c2c6d1" type="OS:KEY_NOT_FOUND">
+					<logger level="WARN" doc:name="Log No Key Found" doc:id="ab27418a-cc0f-43a0-a1d0-34bd11e9743b" message="No Batch status found to clear" category="${api.logger.package}"/>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<set-payload value='#[output application/json --- {message: "Job status cleared"}]' doc:name="Set Payload" doc:id="c10aefab-1763-4d1a-9f9c-0f03c1f871b7" />
+	</sub-flow>
+	
 </mule>

@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns="http://www.mulesoft.org/schema/mule/core"
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
-	<sub-flow name="check-batch-status" doc:id="031eba36-c8d0-4a5a-bdee-47f91651dbb5" >
-		<os:retrieve doc:name="Retrieve Batch Status" doc:id="3d8744f6-9a7a-4dd5-ba3a-0fcd97ffc095" key="${batch.status.key}" objectStore="Batch_Error_Object_store">
-			<os:default-value ><![CDATA[#[{
-	"status": "",
-	"lastRun": ""
-}]]]></os:default-value>
-		</os:retrieve>
-		<logger level="INFO" doc:name="Log Batch Status" doc:id="02eaa72b-7afe-4451-ad41-cd9291fa95d5" message="Batch Status #[payload]" category="${api.logger.package}"/>
+
+	
+	<sub-flow name="batch-api-implementation-get-healthcheck"
+		doc:id="1603dd0b-0082-48f0-b57f-20cd61bf5dec">
+		<ee:transform doc:name="Healthcheck response"
+			doc:id="7ccb10dd-aae0-4d45-adcf-938406e28aeb">
+			<ee:message>
+				<ee:set-payload
+					resource="transformations/getHealthcheckResponse.dwl" />
+			</ee:message>
+		</ee:transform>
 	</sub-flow>
-	<sub-flow name="clear-batch-status" doc:id="905f90d1-4f93-4c34-9135-f7b80af46821" >
-		<try doc:name="Try" doc:id="952fd188-b9e1-4645-bd74-07cfbeecaa8e" >
-			<os:remove doc:name="Remove Batch Status" doc:id="b422f4f2-9737-423b-8b13-686f90778b9b" key="${batch.status.key}" objectStore="Batch_Error_Object_store" />
-			<error-handler >
-				<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="42da1a72-73b3-4982-9102-ed4c557002a4" type="OS:KEY_NOT_FOUND">
-					<logger level="WARN" doc:name="Log No Key Found" doc:id="d0f3db0e-c475-4655-822e-6d47492cb864" message="No Batch status found to clear" category="${api.logger.package}"/>
-				</on-error-continue>
-			</error-handler>
-		</try>
-		<set-payload value='#[output application/json --- {message: "Job status cleared"}]' doc:name="Set Payload" doc:id="3e77ae45-9fed-47cd-9a52-796d4bb4d30b" />
-	</sub-flow>
+	
 </mule>
