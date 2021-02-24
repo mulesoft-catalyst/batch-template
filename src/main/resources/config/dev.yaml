@@ -19,9 +19,12 @@ batch:
     secure: "true"
   scheduler:
     frequency: "5"
+
     
 cache:
   failure:
     ttl: "60"
     interval: "30"    
+    
+  
    

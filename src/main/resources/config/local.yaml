@@ -18,8 +18,9 @@ batch:
     path: "/tomwhite/covid-19-uk-data/master/data/raw/phw/csv/Tests_by_specimen_date.csv"
     secure: "true"
   scheduler:
-    frequency: "5"
-     
+    frequency: "60"
+
+    
 cache:
   failure:
     ttl: "60"
