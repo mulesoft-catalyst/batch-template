@@ -1,18 +1,30 @@
 apiId: "0000"
-
-http:
-  host: "0.0.0.0"
-  port: "8081"
   
 https:
   host: "0.0.0.0"
   port: "8082"
  
-batch:
-  data: "https://raw.githubusercontent.com/tomwhite/covid-19-uk-data/master/data/raw/phw/csv/Tests_by_specimen_date.csv"
+# batch:
+#  data: 
+#    host: "localhost"
+#    port: "8082"
+#    path: "/api/data"
+#    secure: "false"
 
+batch:
+  data: 
+    host: "raw.githubusercontent.com"
+    port: "443"
+    path: "/tomwhite/covid-19-uk-data/master/data/raw/phw/csv/Tests_by_specimen_date.csv"
+    secure: "true"
+  scheduler:
+    frequency: "5"
+
+    
 cache:
   failure:
     ttl: "60"
     interval: "30"    
+    
+  
    

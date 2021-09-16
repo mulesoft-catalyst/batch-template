@@ -1,6 +1,6 @@
 #%RAML 1.0
 title: batch-template
-description: A standard way of implementing batch processing and capture failores and successfull records
+description: A standard way of implementing batch processing and capture failure and successful records
 baseUri: http://localhost:8081/batch-processing/
 
 /batch:
@@ -35,7 +35,14 @@ baseUri: http://localhost:8081/batch-processing/
           body:
             application/json:
               
- 
+/data:
+    get:
+      description: Provide sample records for testing
+      responses:
+        200:
+          body:
+            application/csv:
+            
 /healthcheck:
   get:
     responses:
